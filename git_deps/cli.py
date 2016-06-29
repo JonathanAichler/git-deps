@@ -31,7 +31,7 @@ from git_deps.gitutils import GitUtils
 from git_deps.listener.json import JSONDependencyListener
 from git_deps.listener.cli import CLIDependencyListener
 from git_deps.server import serve
-from git_deps.utils import abort
+from git_deps.utils import abort, standard_logger
 
 __author__ = "Adam Spiers"
 __copyright__ = "Adam Spiers"

@@ -9,6 +9,13 @@ def abort(msg, exitcode=1):
     sys.exit(exitcode)
 
 
+def standard_logger(class_name, debug):
+    if not debug:
+        return logging.getLogger(class_name)
+
+    return debug_logger(class_name)
+
+
 def debug_logger(class_name):
     log_format = '%(asctime)-15s %(levelname)-6s %(message)s'
     date_format = '%b %d %H:%M:%S'
