@@ -5,6 +5,7 @@ import sys
 import pygit2
 
 from git_deps.utils import abort, standard_logger
+from git_deps.gitutils import GitUtils
 from git_deps.listener.base import DependencyListener
 from git_deps.errors import InvalidCommitish
 
@@ -169,7 +170,7 @@ class DependencyDetector(object):
         dependent_sha1 = dependent.hex
         if dependent_sha1 not in self.dependencies:
             self.logger.debug('        New dependent: %s (%s)' %
-                              (dependent_sha1[:8], self.oneline(dependent)))
+                              (dependent_sha1[:8], GitUtils.oneline(dependent)))
             self.dependencies[dependent_sha1] = {}
             self.notify_listeners('new_dependent', dependent)
 
@@ -189,7 +190,7 @@ class DependencyDetector(object):
                 self.logger.debug(
                     '        Excluding dependency %s from line %s (%s)' %
                     (dependency_sha1[:8], line_num,
-                     self.oneline(dependency)))
+                     GitUtils.oneline(dependency)))
                 continue
 
             if dependency_sha1 not in self.dependencies[dependent_sha1]:
@@ -207,7 +208,8 @@ class DependencyDetector(object):
 
                 self.logger.debug(
                     '        New dependency %s via line %s (%s)' %
-                    (dependency_sha1[:8], line_num, self.oneline(dependency)))
+                    (dependency_sha1[:8], line_num,
+                     GitUtils.oneline(dependency)))
                 self.dependencies[dependent_sha1][dependency_sha1] = {}
                 self.notify_listeners('new_commit', dependency)
                 self.notify_listeners('new_dependency',
@@ -246,9 +248,6 @@ class DependencyDetector(object):
                 line_num += 1
             self.logger.debug(diff_format %
                               (rev, ln, line.origin, line.content.rstrip()))
-
-    def oneline(self, commit):
-        return commit.message.split('\n', 1)[0]
 
     def is_excluded(self, commit):
         if self.options.exclude_commits is not None:
